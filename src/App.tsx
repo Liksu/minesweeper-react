@@ -7,7 +7,7 @@ import {IBoardSettings, modes} from "./board-state";
 const defaultSettings = {width: 12, height: 8, mines: 12} as IBoardSettings
 
 function App() {
-    const settings = modes[window.location.href] || defaultSettings
+    const settings = modes[window.location.hash.replace(/^#/, '')] || defaultSettings
     if (window.innerWidth < 768 && settings.width > settings.height) {
         [settings.width, settings.height] = [settings.height, settings.width]
     }
