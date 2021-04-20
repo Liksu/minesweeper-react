@@ -8,7 +8,9 @@ const defaultSettings = {width: 12, height: 8, mines: 12} as IBoardSettings
 
 function App() {
     const settings = modes[window.location.href] || defaultSettings
-    alert(window.innerWidth)
+    if (window.innerWidth < 768 && settings.width > settings.height) {
+        [settings.width, settings.height] = [settings.height, settings.width]
+    }
 
     return (
         <div className="App">
