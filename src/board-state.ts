@@ -23,10 +23,10 @@ export class IFieldSettings {
     }
 }
 
-export const modes = {
-    Beginner: {width: 9, height: 9, mines: 10} as IBoardSettings,
-    Intermediate: {width: 16, height: 16, mines: 40} as IBoardSettings,
-    Expert: {width: 30, height: 16, mines: 99} as IBoardSettings,
+export const modes: {[mode: string]: IBoardSettings} = {
+    Beginner: {width: 9, height: 9, mines: 10},
+    Intermediate: {width: 16, height: 16, mines: 40},
+    Expert: {width: 30, height: 16, mines: 99},
 }
 
 export class BoardState extends Array {
