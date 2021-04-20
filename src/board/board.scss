@@ -1,0 +1,18 @@
+.board {
+  --size: calc(min(100vh / var(--rows), 100vw / var(--columns)));
+  --rows: 1;
+  --columns: 1;
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  grid-template-columns: repeat(var(--columns), var(--size));
+  grid-auto-rows: var(--size);
+
+  &.win .field {
+    background-color: #ced7ce;
+  }
+
+  &.loose .field {
+    background-color: #dbc1c1;
+  }
+}

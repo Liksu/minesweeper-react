@@ -1,26 +1,19 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
 
+import {Board} from "./board/board";
+import {IBoardSettings, modes} from "./board-state";
+
+const defaultSettings = {settings: {width: 12, height: 8, mines: 12} as IBoardSettings}
+
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+    const settings = modes.Beginner || defaultSettings
+
+    return (
+        <div className="App">
+            <Board width={settings.width} height={settings.height} mines={settings.mines}/>
+        </div>
+    );
 }
 
 export default App;
