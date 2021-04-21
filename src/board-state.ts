@@ -34,9 +34,10 @@ export class BoardState extends Array {
     board: Array<Array<IFieldSettings>> = []
     minesFields: Array<IFieldSettings> = []
 
-    width = 10
-    height = 10
-    mines = 5
+    width = 8
+    height = 8
+    mines = 8
+
 
     createBoard(settings: IBoardSettings, empty = false) {
         Object.assign(this, settings);
@@ -99,6 +100,10 @@ export class BoardState extends Array {
 
         runner(field)
         return found
+    }
+
+    get minesCount() {
+        return this.mines - this.fields.filter(f => f.isMarked).length
     }
 
 }
