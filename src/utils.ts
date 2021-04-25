@@ -8,7 +8,7 @@ export function classes(...classes: Array<string | Array<string> | {[className: 
 export class DebouncedClick {
     timerId = 0
     values: Array<number> = []
-    duration = 80
+    duration = 100
     cb?: Function
 
     constructor(cb: Function) {
@@ -17,13 +17,15 @@ export class DebouncedClick {
 
     next = (event: any): void => {
         if (this.timerId) clearTimeout(this.timerId)
+        const buttons = isNaN(Number(event)) ? event.buttons : event
+        // console.log('next', {buttons})
         this.timerId = window.setTimeout(this.flush, this.duration)
-
-        this.values.push(event.buttons);
+        this.values.push(buttons)
     }
 
     private flush = () => {
-        if (this.cb) this.cb(Math.max(...this.values))
+        const value = this.values.includes(1) && this.values.includes(2) ? 3 : Math.max(...this.values)
+        if (this.cb) this.cb(value)
         this.values = []
         this.timerId = 0
     }

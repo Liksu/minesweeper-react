@@ -10,6 +10,7 @@
   justify-content: center;
   align-items: center;
   user-select: none;
+  pointer-events: auto;
 
   &.open {
     border: 1px solid gray;
@@ -18,7 +19,22 @@
   }
 
   &.marked {
+  }
 
+  &:before {
+    pointer-events: none;
+  }
+
+  &.animate:before {
+    animation: mines-count 1s;
+
+    counter-reset: count var(--count);
+    content: counter(count);
+    position: absolute;
+    display: block;
+    color: white;
+    margin-top: calc(.5 * var(--size) * var(--direction));
+    visibility: hidden;
   }
 
   &.around1 { color: #0000ff }
@@ -29,4 +45,21 @@
   &.around6 { color: #007b7b }
   &.around7 { color: #000000 }
   &.around8 { color: #7b7b7b }
+}
+
+@keyframes mines-count {
+  from {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  64% {
+    opacity: 1;
+  }
+
+  to {
+    margin-top: calc(4 * var(--size) * var(--direction));
+    opacity: 0;
+    visibility: hidden;
+  }
 }

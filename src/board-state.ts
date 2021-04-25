@@ -1,4 +1,4 @@
-import {arand, rand} from "./utils";
+import {arand} from "./utils";
 import {Field} from "./field/field";
 
 export interface IBoardSettings {
@@ -23,12 +23,6 @@ export class IFieldSettings {
     }
 }
 
-export const modes: {[mode: string]: IBoardSettings} = {
-    Beginner: {width: 9, height: 9, mines: 10},
-    Intermediate: {width: 16, height: 16, mines: 40},
-    Expert: {width: 30, height: 16, mines: 99},
-}
-
 export class BoardState extends Array {
     fields: Array<IFieldSettings> = []
     board: Array<Array<IFieldSettings>> = []
@@ -41,7 +35,6 @@ export class BoardState extends Array {
 
     createBoard(settings: IBoardSettings, empty = false) {
         Object.assign(this, settings);
-        console.log('BoardState.createBoard')
 
         // reset properties
         this.fields = [];
@@ -84,7 +77,7 @@ export class BoardState extends Array {
         const {x, y} = field;
         return [
             [x - 1, y - 1], [x, y - 1], [x + 1, y - 1],
-            [x - 1, y    ], /*  ;)  */  [x + 1, y    ],
+            [x - 1, y], /*  ;)  */  [x + 1, y],
             [x - 1, y + 1], [x, y + 1], [x + 1, y + 1],
         ].filter(([x, y]) => x >= 0 && x < this.width && y >= 0 && y < this.height)
             .map(([x, y]) => this.board[x][y])
@@ -103,7 +96,6 @@ export class BoardState extends Array {
     }
 
     get minesCount() {
-        return this.mines - this.fields.filter(f => f.isMarked).length
+        return this.mines - this.fields.filter(field => field.isMarked).length
     }
-
 }

@@ -24,10 +24,11 @@ export class Board extends React.Component<IBoardProps> {
     }
 
     render() {
-        console.log('Board.render', this.board)
+        // console.log('Board.render', this.board)
         const settings = {
             '--columns': this.props.width,
             '--rows': this.props.height,
+            '--count': this.board.minesCount
         } as React.CSSProperties;
 
         return <div className={classes('board', {win: this.state.won === true, loose: this.state.won === false})} style={settings}>
@@ -45,7 +46,7 @@ export class Board extends React.Component<IBoardProps> {
     checkWin(clickedField?: IFieldSettings) {
         const closedFound = this.board.fields.find(field => !field.isMine && (!field.isOpen && clickedField !== field))
         if (!closedFound) {
-            console.log('Win!')
+            console.log('Win!', this.timer, 'seconds')
             this.stop()
             this.setState({won: true})
             this.board.minesFields.forEach(field => field.component?.mark(true))
@@ -71,7 +72,7 @@ export class Board extends React.Component<IBoardProps> {
         if (field.isMarked) return;
 
         const found = this.board.lookup(field)
-        found.forEach(field => field.component?.open())
+        found.forEach(field => !field.isOpen && field.component?.open())
 
         const hasMine = found.find((field: IFieldSettings) => field.isMine)
         if (hasMine) this.gameOver()
