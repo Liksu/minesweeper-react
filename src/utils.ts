@@ -5,32 +5,6 @@ export function classes(...classes: Array<string | Array<string> | {[className: 
     }).join(' ')
 }
 
-export class DebouncedClick {
-    timerId = 0
-    values: Array<number> = []
-    duration = 100
-    cb?: Function
-
-    constructor(cb: Function) {
-        this.cb = cb
-    }
-
-    next = (event: any): void => {
-        if (this.timerId) clearTimeout(this.timerId)
-        const buttons = isNaN(Number(event)) ? event.buttons : event
-        // console.log('next', {buttons})
-        this.timerId = window.setTimeout(this.flush, this.duration)
-        this.values.push(buttons)
-    }
-
-    private flush = () => {
-        const value = this.values.includes(1) && this.values.includes(2) ? 3 : Math.max(...this.values)
-        if (this.cb) this.cb(value)
-        this.values = []
-        this.timerId = 0
-    }
-}
-
 export function range(a: number, b?: number) {
     if (a < 0 && b == null) b = -1
     if (b == null) [a, b] = [1, a]

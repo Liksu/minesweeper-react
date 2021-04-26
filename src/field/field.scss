@@ -12,10 +12,15 @@
   user-select: none;
   pointer-events: auto;
 
-  &.open {
+  &.open, &.pressed {
     border: 1px solid gray;
     border-top: 0;
     border-left: 0;
+  }
+
+  &.suggested:after {
+    color: white;
+    content: "?";
   }
 
   &.marked {
