@@ -2,7 +2,7 @@ import React from "react";
 import './field.scss'
 import {classes} from "../utils";
 import {IFieldSettings} from "../board-state";
-import {ClickValues, DebouncedClicks} from "../debounced-clicks";
+import {ClickTarget, ClickValues} from "../debounced-clicks";
 
 interface IFieldProps {
     move?: Function;
@@ -10,7 +10,7 @@ interface IFieldProps {
     field: IFieldSettings;
 }
 
-export class Field extends React.Component<IFieldProps> {
+export class Field extends React.Component<IFieldProps> implements ClickTarget {
     state = {
         content: '',
         isSuggested: false,
@@ -18,13 +18,11 @@ export class Field extends React.Component<IFieldProps> {
     }
 
     enabled = true;
-    click: DebouncedClicks
     settings: IFieldSettings
     private readonly element: React.RefObject<HTMLDivElement>;
 
     constructor(props: IFieldProps) {
         super(props);
-        this.click = new DebouncedClicks(this.onClick, this.onPress)
         this.settings = props.field
         this.settings.component = this
         this.element = React.createRef();
@@ -37,7 +35,6 @@ export class Field extends React.Component<IFieldProps> {
         } as React.CSSProperties;
 
         return <div
-            {...this.click.listeners}
             className={classes(
                 'field',
                 `around${this.settings.isMine ? 0 : this.settings.value}`,
@@ -50,6 +47,10 @@ export class Field extends React.Component<IFieldProps> {
             style={cssSettings}
             ref={this.element}
         >{this.state.content}</div>
+    }
+
+    componentDidMount() {
+        this.settings.board?.elements.set(this.element.current as HTMLDivElement, this)
     }
 
     open = () => {
@@ -123,7 +124,7 @@ export class Field extends React.Component<IFieldProps> {
         this.element.current?.classList.add('animate')
     }
 
-    private onPress = (state: boolean, action: ClickValues) => {
+    onPress = (state: boolean, action: ClickValues) => {
         if (action !== ClickValues.Lookup) return
         // console.log('onPress', {state, action}, state ? 'release' : 'press', {1: 'Open', 2: 'Mark', 3: 'Lookup', 4: 'Suggest'}[action])
 

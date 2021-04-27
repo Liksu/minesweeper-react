@@ -1,5 +1,6 @@
 import {arand} from "./utils";
 import {Field} from "./field/field";
+import React from "react";
 
 export interface IBoardSettings {
     width: number;
@@ -27,6 +28,7 @@ export class BoardState extends Array {
     fields: Array<IFieldSettings> = []
     board: Array<Array<IFieldSettings>> = []
     minesFields: Array<IFieldSettings> = []
+    elements: Map<HTMLDivElement, React.Component> = new Map()
 
     width = 8
     height = 8

@@ -3,12 +3,14 @@ import './board.scss'
 import {Field} from "../field/field";
 import {BoardState, IBoardSettings, IFieldSettings} from "../board-state";
 import {classes} from "../utils";
+import {DebouncedClicks} from "../debounced-clicks";
 
 interface IBoardProps extends IBoardSettings {
 }
 
 export class Board extends React.Component<IBoardProps> {
     board = new BoardState()
+    click = new DebouncedClicks(this.board)
     timer = 0
     timerId = 0
 
@@ -31,7 +33,11 @@ export class Board extends React.Component<IBoardProps> {
             '--count': this.board.minesCount
         } as React.CSSProperties;
 
-        return <div className={classes('board', {win: this.state.won === true, loose: this.state.won === false})} style={settings}>
+        return <div
+            {...this.click.listeners}
+            className={classes('board', {win: this.state.won === true, loose: this.state.won === false})}
+            style={settings}
+        >
             {this.board.fields.map(field => (
                 <Field field={field} key={`${field.x}.${field.y}`} move={this.move} lookup={this.lookup}/>
             ))}

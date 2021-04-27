@@ -1,3 +1,6 @@
+import {BoardState} from "./board-state";
+import {Field} from "./field/field";
+
 export enum ClickValues {
     Open = 1,
     Mark = 2,
@@ -5,19 +8,21 @@ export enum ClickValues {
     Suggest
 }
 
-export type ClickResultCb = (action: ClickValues) => void
-export type PressedCb = (state: boolean, action: ClickValues) => void
+export abstract class ClickTarget {
+    public abstract onClick(action: ClickValues): void
+    public abstract onPress(state: boolean, action: ClickValues): void
+}
 
 export class DebouncedClicks {
     timerId = 0
     values: Array<number> = []
     value: ClickValues = 0
     duration = 64
-    resultCb?: ClickResultCb
-    changePhaseCb?: PressedCb
     phase: boolean | null = null // false = touchstart / mousedown, true = touchend / mouseup, null - nothing
+    target: Field | null = null
 
-    private logging = false
+    private boardState: BoardState;
+    private logging = true
     private resultsValues: {[type: string]: ClickValues} = {
         contextmenu: ClickValues.Mark,
         dblclick: ClickValues.Lookup,
@@ -32,9 +37,8 @@ export class DebouncedClicks {
         4: 16, // forward button
     }
 
-    constructor(resultCb?: ClickResultCb, changePhaseCb?: PressedCb) {
-        this.resultCb = resultCb
-        this.changePhaseCb = changePhaseCb
+    constructor(boardState: BoardState) {
+        this.boardState = boardState
     }
 
     get listeners() {
@@ -48,6 +52,10 @@ export class DebouncedClicks {
 
     goDown = (event: any): void => {
         this.log('down', event)
+        if (this.phase === null) {
+            this.target = this.boardState.elements.get(event.target) as Field
+        }
+
         this.phase = false
         this.values.push(this.buttonsMapping[event.button])
 
@@ -72,6 +80,7 @@ export class DebouncedClicks {
     catchResult = (event: any): void => {
         this.log('catch', event)
 
+        if (!this.target) this.target = this.boardState.elements.get(event.target) as Field
         if (!this.value) this.value = this.resultsValues[event.type]
         this.phase = true
         this.flush()
@@ -96,15 +105,16 @@ export class DebouncedClicks {
         if (!saveState) {
             this.value = 0
             this.phase = null
+            this.target = null
         }
     }
 
     private flush = () => {
         this.log('flush')
-        this.changePhaseCb?.(!!this.phase, this.value)
+        this.target?.onPress(!!this.phase, this.value)
 
         if (this.phase) {
-            this.resultCb?.(this.value)
+            this.target?.onClick(this.value)
             this.reset()
         }
     }
