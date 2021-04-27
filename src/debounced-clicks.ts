@@ -22,7 +22,7 @@ export class DebouncedClicks {
     target: Field | null = null
 
     private boardState: BoardState;
-    private logging = true
+    private logging = false
     private resultsValues: {[type: string]: ClickValues} = {
         contextmenu: ClickValues.Mark,
         dblclick: ClickValues.Lookup,
@@ -129,7 +129,7 @@ export class DebouncedClicks {
 
         console.log(name,
             {value, valueStr, phase, values: [...this.values]},
-            event ? {button, buttons, type, event} : new (class NoEvent {})
+            event ? {button, buttons, type, event} : new (class NoEvent {})()
         )
     }
 }
