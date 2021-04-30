@@ -76,7 +76,10 @@ function App() {
     let settings = getSettings()
 
     // fix for mobile landscape
-    const isLandscape = window.screen.orientation.type.substr(0, 4) === 'land'
+    const isLandscape = window.screen.orientation
+        ? window.screen.orientation.type.substr(0, 4) === 'land'
+        : window.innerWidth > window.innerHeight
+
     const isMobile = window.innerWidth < 800
     // @ts-ignore
     if (isMobile && isLandscape && settings.width < settings.height) {
