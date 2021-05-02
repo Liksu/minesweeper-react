@@ -4,6 +4,10 @@ import './App.css';
 import {Board} from "./board/board";
 import {IBoardSettings} from "./board-state";
 
+export interface IPossibleBoardSettings extends Omit<IBoardSettings, 'mines'>{
+    mines: { beginner: number, default: number, intermediate: number, expert: number }
+}
+
 const modes: {[mode: string]: IBoardSettings} = {
     beginner: {width: 9, height: 9, mines: 10},
     default: {width: 12, height: 8, mines: 12},
@@ -28,6 +32,26 @@ const synonyms: {[key: string]: string} = {
     big: 'expert',
     max: 'expert',
     herd: 'expert'
+}
+
+function getPossibleSettings(): Array<IPossibleBoardSettings> {
+    const vw = window.innerWidth, vh = window.innerHeight
+    const result = []
+    const modes = Object.keys(fillModes) as Array<keyof IPossibleBoardSettings['mines']>
+    for (let columns = 2; columns <= 100; columns++)
+        for (let rows = 2; rows < 100; rows++) {
+            const size = Math.min(vh / rows, vw / columns)
+            const width = columns * size
+            const height = rows * size
+            if (vw - width < 10 && vh - height < 10) {
+                const area = columns * rows
+                const settings = {width: columns, height: rows, mines: {}} as IPossibleBoardSettings
+                modes.forEach(mode => settings.mines[mode] = Math.floor(fillModes[mode].mines * area))
+                result.push(settings)
+            }
+        }
+
+    return result
 }
 
 function getSettings(): IBoardSettings {
@@ -74,6 +98,8 @@ function getSettings(): IBoardSettings {
 
 function App() {
     let settings = getSettings()
+    // @ts-ignore
+    window.possibleSettings = getPossibleSettings()
 
     // fix for mobile landscape
     const isLandscape = window.screen.orientation
