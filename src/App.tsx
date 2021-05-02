@@ -9,10 +9,10 @@ export interface IPossibleBoardSettings extends Omit<IBoardSettings, 'mines'>{
 }
 
 const modes: {[mode: string]: IBoardSettings} = {
-    beginner: {width: 9, height: 9, mines: 10},
-    default: {width: 12, height: 8, mines: 12},
-    intermediate: {width: 16, height: 16, mines: 40},
-    expert: {width: 30, height: 16, mines: 99},
+    beginner: {columns: 9, rows: 9, mines: 10},
+    default: {columns: 12, rows: 8, mines: 12},
+    intermediate: {columns: 16, rows: 16, mines: 40},
+    expert: {columns: 30, rows: 16, mines: 99},
 }
 
 const fillModes: {[mode: string]: {min: number, mines: number}} = {
@@ -45,7 +45,7 @@ function getPossibleSettings(): Array<IPossibleBoardSettings> {
             const height = rows * size
             if (vw - width < 10 && vh - height < 10) {
                 const area = columns * rows
-                const settings = {width: columns, height: rows, mines: {}} as IPossibleBoardSettings
+                const settings = {columns, rows, mines: {}} as IPossibleBoardSettings
                 modes.forEach(mode => settings.mines[mode] = Math.floor(fillModes[mode].mines * area))
                 result.push(settings)
             }
@@ -75,18 +75,18 @@ function getSettings(): IBoardSettings {
         return innerWidth > innerHeight
             ? {
                 mines,
-                width: fieldsMaxSide,
-                height: calcSettings.min
+                columns: fieldsMaxSide,
+                rows: calcSettings.min
             }
             : {
                 mines,
-                width: calcSettings.min,
-                height: fieldsMaxSide
+                columns: calcSettings.min,
+                rows: fieldsMaxSide
             }
     }
 
     if (/^custom:/.test(hash)) {
-        const groups = hash.match(/^custom:(?<width>\d+)\D(?<height>\d+)\D(?<mines>\d+)/)?.groups as {[key: string]: string}
+        const groups = hash.match(/^custom:(?<columns>\d+)\D(?<rows>\d+)\D(?<mines>\d+)/)?.groups as {[key: string]: string}
         let customSettings = {} as IBoardSettings
         for (let key in groups) customSettings[key as keyof IBoardSettings] = +groups[key]
         return customSettings
@@ -108,13 +108,13 @@ function App() {
 
     const isMobile = window.innerWidth < 800
     // @ts-ignore
-    if (isMobile && isLandscape && settings.width < settings.height) {
-        [settings.width, settings.height] = [settings.height, settings.width]
+    if (isMobile && isLandscape && settings.columns < settings.rows) {
+        [settings.columns, settings.rows] = [settings.rows, settings.columns]
     }
 
     return (
         <div className="App">
-            <Board width={settings.width} height={settings.height} mines={settings.mines}/>
+            <Board columns={settings.columns} rows={settings.rows} mines={settings.mines}/>
         </div>
     );
 }

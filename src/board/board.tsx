@@ -28,8 +28,8 @@ export class Board extends React.Component<IBoardProps> {
     render() {
         // console.log('Board.render', this.board)
         const settings = {
-            '--columns': this.props.width,
-            '--rows': this.props.height,
+            '--columns': this.props.columns,
+            '--rows': this.props.rows,
             '--count': this.board.minesCount
         } as React.CSSProperties;
 

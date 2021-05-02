@@ -3,8 +3,8 @@ import {Field} from "./field/field";
 import React from "react";
 
 export interface IBoardSettings {
-    width: number;
-    height: number;
+    columns: number;
+    rows: number;
     mines: number;
 }
 
@@ -30,8 +30,8 @@ export class BoardState extends Array {
     minesFields: Array<IFieldSettings> = []
     elements: Map<HTMLDivElement, React.Component> = new Map()
 
-    width = 8
-    height = 8
+    columns = 8
+    rows = 8
     mines = 8
 
 
@@ -42,13 +42,13 @@ export class BoardState extends Array {
         this.fields = [];
         this.minesFields = [];
         this.board = [];
-        for (let x = 0; x < this.width; x++) {
+        for (let x = 0; x < this.columns; x++) {
             this.board[x] = []
         }
 
         // create fields
-        for (let y = 0; y < this.height; y++) {
-            for (let x = 0; x < this.width; x++) {
+        for (let y = 0; y < this.rows; y++) {
+            for (let x = 0; x < this.columns; x++) {
                 this.board[x][y] = new IFieldSettings({x, y, value: 0, board: this})
                 this.fields.push(this.board[x][y])
             }
@@ -59,8 +59,8 @@ export class BoardState extends Array {
         // set mines
         let n = this.mines;
         while (n) {
-            const x = arand(this.width)
-            const y = arand(this.height)
+            const x = arand(this.columns)
+            const y = arand(this.rows)
 
             if (!this.board[x][y].isMine && x !== starter.x && y !== starter.y) {
                 this.minesFields.push(this.board[x][y])
@@ -81,7 +81,7 @@ export class BoardState extends Array {
             [x - 1, y - 1], [x, y - 1], [x + 1, y - 1],
             [x - 1, y], /*  ;)  */  [x + 1, y],
             [x - 1, y + 1], [x, y + 1], [x + 1, y + 1],
-        ].filter(([x, y]) => x >= 0 && x < this.width && y >= 0 && y < this.height)
+        ].filter(([x, y]) => x >= 0 && x < this.columns && y >= 0 && y < this.rows)
             .map(([x, y]) => this.board[x][y])
     }
 
