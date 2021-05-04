@@ -1,0 +1,15 @@
+.settings-selector {
+  background-color: white;
+  border-radius: 4px;
+  width: 30vw;
+
+  @media (max-width: var(--phone)) {
+    width: 80vw;
+    color: green;
+  }
+
+  @media (min-width: var(--phone)) and (max-width: var(--tablet)) {
+    width: 60vw;
+    color: blue;
+  }
+}
