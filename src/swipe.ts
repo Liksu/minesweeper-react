@@ -7,6 +7,7 @@ export class Swipe {
     private startY: number | null = null
     private readonly element: HTMLElement | null = null
     private handlers: Handlers = {}
+    private threshold = Math.min(window.innerWidth, window.innerHeight) / 5
 
     constructor(element: HTMLElement | string = document.body, addImmediately = false) {
         this.element = typeof element === 'string' ? document.querySelector(element) ?? null : (element as HTMLElement)
@@ -44,15 +45,20 @@ export class Swipe {
         if (this.startX == null || this.startY == null) return;
 
         const {clientX: endX, clientY: endY} = event.changedTouches[0]
-        
-        const diffX = this.startX - endX
-        const diffY = this.startY - endY
+
+        let diffX = this.startX - endX
+        if (Math.abs(diffX) < this.threshold) diffX = 0
+
+        let diffY = this.startY - endY
+        if (Math.abs(diffY) < this.threshold) diffY = 0
+
         const isHorizontal = Math.abs(diffX) > Math.abs(diffY)
 
         const direction: Direction = isHorizontal
             ? diffX > 0 ? 'left' : 'right'
             : diffY > 0 ? 'up' : 'down'
 
+        // console.log('swipe', {diffX, diffY, dx: this.startX - endX, dy: this.startY - endY, th: this.threshold, isHorizontal, direction})
         this.startX = null;
         this.startY = null;
 
