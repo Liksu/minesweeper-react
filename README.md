@@ -4,14 +4,14 @@ This is the very small game made with [react](https://reactjs.org/).
 
 ## Controls
 
-Mouse | Tap | Action
+Desktop | Mobile | Action
 ---|---|---
 Left click | Tap | Open cell
 Right click | Long tap | Mark cell
 Left + Right click | Double tap | Open the nearest free cells (if the number of cells marked around is equal to the value in the target cell)
 Middle click | — | Temporary mark cell with a question sign
-Keyboard Escape | Swipe to right | Show settings panel
-Keyboard Escape | Swipe to left | Close settings panel
+Escape | Swipe to right | Show settings panel
+Escape | Swipe to left | Close settings panel
 
 ## Game modes
 
