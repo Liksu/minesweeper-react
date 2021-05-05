@@ -1,25 +1,122 @@
 import React from "react";
 import './settings-selector.scss'
-import {config, Settings} from "../settings";
+import {Difficulty, IPossibleBoardSettings, Settings} from "../settings";
+import {GameState} from "../board-state";
+
+export interface IInfo {
+    timer: number
+    minesLeft: number
+    state: GameState
+}
 
 interface ISettingsSelectorProps {
-    settings: Settings,
+    settings: Settings
+    info: IInfo
+}
+
+interface IState {
+    board: string | null
+    mines: Difficulty | null
 }
 
 export class SettingsSelector extends React.Component<ISettingsSelectorProps> {
-    // constructor(props: ISettingsSelectorProps) {
-    //     super(props);
-    // }
+    joiner = 'x'
+    possible: Array<IPossibleBoardSettings> = []
+    state: IState
+
+    constructor(props: ISettingsSelectorProps) {
+        super(props);
+
+        this.possible = this.props.settings.getPossibleSettings()
+        let board: string | null = [this.props.settings.columns, this.props.settings.rows].join(this.joiner)
+        if (!this.getVariantByBoard(board)) board = null
+
+        const difficulty: {[mines: string]: Difficulty} = {
+            [this.getMinesCount('beginner', board)]: 'beginner',
+            [this.getMinesCount('intermediate', board)]: 'intermediate',
+            [this.getMinesCount('expert', board)]: 'expert',
+        }
+        const mines = difficulty[this.props.settings.mines]
+
+        this.state = {board, mines}
+    }
 
     render() {
-        const cssSettings = {
-            '--phone': config.screens.phone + 'px',
-            '--tablet': config.screens.tablet + 'px',
-        } as React.CSSProperties
+        return <div className="settings-selector" onClick={event => event.stopPropagation()}>
+            {this.props.info.state !== GameState.Pending &&
+                <div>
+                    <h3>Game State: {this.props.info?.state}</h3>
+                    <h4 className="sub">Seconds from start: {this.props.info?.timer ?? '--'}</h4>
+                    <h4 className="sub">Mines left: {this.props.info?.minesLeft}</h4>
+                </div>
+            }
 
-        const possibleSettings = this.props.settings.getPossibleSettings()
+            <h3>Standard difficulty levels:</h3>
+            <p className="link" onClick={() => this.changeSettings('fill')}>Default</p>
+            <p className="link" onClick={() => this.changeSettings('fill:beginner')}>Beginner</p>
+            <p className="link" onClick={() => this.changeSettings('fill:intermediate')}>Intermediate</p>
+            <p className="link" onClick={() => this.changeSettings('fill:expert')}>Expert</p>
 
-        return <div className="settings-selector" style={cssSettings}>
+            <h3>Custom board:</h3>
+            <label>
+                <h4>Board size:</h4>
+                <select onChange={this.changeCustom} name="board" defaultValue={this.state.board as string}>
+                    {!this.state.board &&
+                        <option className="default">-- Select Board --</option>
+                    }
+                    {this.possible.map(variant => {
+                        const name = [variant.columns, variant.rows].join(this.joiner)
+                        return <option key={name} value={name}>{name}</option>
+                    })}
+                </select>
+            </label>
+
+            <label>
+                <h4>Mines count:</h4>
+                <select onChange={this.changeCustom} name="mines" defaultValue={this.state.mines as string}>
+                    {!this.state.mines &&
+                        <option className="default">-- Select Mines --</option>
+                    }
+                    <option value="beginner">
+                        Beginner {this.state.board && `(${this.getMinesCount('beginner')})`}
+                    </option>
+                    <option value="intermediate">
+                        Intermediate {this.state.board && `(${this.getMinesCount('intermediate')})`}
+                    </option>
+                    <option value="expert">
+                        Expert {this.state.board && `(${this.getMinesCount('expert')})`}
+                    </option>
+                </select>
+            </label>
+
+            <button className="button" onClick={() => this.changeSettings('')}
+                    disabled={!this.state.board || !this.state.mines}>Apply Custom
+            </button>
         </div>
+    }
+
+    changeCustom = (event: any) => {
+        this.setState({[event.target.name]: event.target.value})
+    }
+
+    changeSettings = (hash: string = 'fill:default') => {
+        if (!hash && this.state.board && this.state.mines) {
+            const variant = this.getVariantByBoard(this.state.board)
+            hash = 'custom:' + [variant?.columns, variant?.rows, variant?.mines[this.state.mines]].join(this.joiner)
+        }
+
+        window.history.pushState({}, 'Minesweeper', '#' + hash)
+        window.location.reload()
+    }
+
+    private getMinesCount(mines: Difficulty, board: string | null = this.state.board): string {
+        if (!board) return '--'
+        const variant = this.getVariantByBoard(board)
+        return variant?.mines[mines].toString() ?? '--'
+    }
+
+    getVariantByBoard(board: string): IPossibleBoardSettings | null {
+        const [columns, rows] = board.split(this.joiner).map(string => Number(string))
+        return this.possible.find(variant => variant.columns === columns && variant.rows === rows) ?? null
     }
 }

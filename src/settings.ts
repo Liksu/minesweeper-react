@@ -1,20 +1,22 @@
-import {IBoardSettings} from "./board-state";
+import {IBoardSettings, TSettings} from "./board-state";
 
-export const modes: {[mode: string]: IBoardSettings} = {
+export type Difficulty = 'beginner' | 'default' | 'intermediate' | 'expert'
+
+export const modes: {[difficulty in Difficulty]: IBoardSettings} = {
     beginner: {columns: 9, rows: 9, mines: 10},
     default: {columns: 12, rows: 8, mines: 12},
     intermediate: {columns: 16, rows: 16, mines: 40},
     expert: {columns: 30, rows: 16, mines: 99},
 }
 
-export const fillModes: {[mode: string]: {min: number, mines: number}} = {
+export const fillModes: {[difficulty in Difficulty]: {min: number, mines: number}} = {
     beginner: {min: 10, mines: 0.12},
     default: {min: 12, mines: 0.125},
     intermediate: {min: 16, mines: 0.15},
     expert: {min: 20, mines: 0.2}
 }
 
-const synonyms: {[key: string]: string} = {
+const synonyms: {[key: string]: Difficulty} = {
     beginer: 'beginner',
     small: 'beginner',
     easy: 'beginner',
@@ -27,14 +29,7 @@ const synonyms: {[key: string]: string} = {
 }
 
 export interface IPossibleBoardSettings extends Omit<IBoardSettings, 'mines'>{
-    mines: { beginner: number, default: number, intermediate: number, expert: number }
-}
-
-export const config = {
-    screens: {
-        phone: 800,
-        tablet: 1024
-    }
+    mines: {[difficulty in Difficulty]: number}
 }
 
 export class Settings implements IBoardSettings {
@@ -50,21 +45,28 @@ export class Settings implements IBoardSettings {
             ? window.screen.orientation.type.substr(0, 4) === 'land'
             : window.innerWidth > window.innerHeight
 
-        const isMobile = window.innerWidth < config.screens.phone
+        const isMobile = window.innerWidth < 800
 
         if (isMobile && isLandscape && settings.columns < settings.rows) {
             [settings.columns, settings.rows] = [settings.rows, settings.columns]
         }
 
         Object.assign(this, settings)
+
+        // @ts-ignore
+        window.settings = this
     }
 
     public getPossibleSettings(): Array<IPossibleBoardSettings> {
         const vw = window.innerWidth, vh = window.innerHeight
         const result = []
         const modes = Object.keys(fillModes) as Array<keyof IPossibleBoardSettings['mines']>
-        for (let columns = 2; columns <= 100; columns++)
-            for (let rows = 2; rows < 100; rows++) {
+        for (let columns = 100; columns >= 2; columns--)
+            for (let rows = 100; rows >= 2; rows--) {
+                const found = result.find(result => result.columns === columns || result.rows === rows)
+                // console.log({columns, rows, found})
+                if (found) continue;
+
                 const size = Math.min(vh / rows, vw / columns)
                 const width = columns * size
                 const height = rows * size
@@ -76,18 +78,18 @@ export class Settings implements IBoardSettings {
                 }
             }
 
-        return result
+        return result.reverse()
     }
 
-    private static getInitialSettings(): IBoardSettings {
+    static getInitialSettings(): IBoardSettings {
         let hash = window.location.hash.replace('#', '').toLowerCase()
 
         if (!hash) return modes.default
         if (hash in synonyms) hash = synonyms[hash]
-        if (hash in modes) return modes[hash]
+        if (hash in modes) return modes[hash as Difficulty]
 
         if (/^fill:?(\w+)?$/.test(hash)) {
-            const calcSettings = fillModes[RegExp.$1] || fillModes[synonyms[RegExp.$1]] || fillModes.default
+            const calcSettings = fillModes[RegExp.$1 as Difficulty] || fillModes[synonyms[RegExp.$1] as Difficulty] || fillModes.default
             const {innerWidth, innerHeight} = window
             const maxSize = Math.max(innerWidth, innerHeight)
             const minSize = Math.min(innerWidth, innerHeight)
@@ -111,12 +113,11 @@ export class Settings implements IBoardSettings {
         }
 
         if (/^custom:/.test(hash)) {
-            const groups = hash.match(/^custom:(?<columns>\d+)\D(?<rows>\d+)\D(?<mines>\d+)/)?.groups as {[key: string]: string}
+            const groups = hash.match(/^custom:(?<columns>\d+)\D(?<rows>\d+)\D(?<mines>\d+)/)?.groups as {[key in TSettings]: string}
             let customSettings = {} as IBoardSettings
-            for (let key in groups) customSettings[key as keyof IBoardSettings] = +groups[key]
+            for (let key in groups) customSettings[key as keyof IBoardSettings] = +groups[key as TSettings]
             return customSettings
         }
-
 
         return modes.default
     }

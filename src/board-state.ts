@@ -2,6 +2,14 @@ import {arand} from "./utils";
 import {Field} from "./field/field";
 import React from "react";
 
+export type TSettings = 'columns' | 'rows' | 'mines'
+export enum GameState {
+    Pending = 'Pending',
+    InProgress = 'In Progress',
+    Win = 'You Win! 😎',
+    Loose = 'You Loose 🙁'
+}
+
 export interface IBoardSettings {
     columns: number;
     rows: number;

@@ -7,6 +7,7 @@ import {ClickTarget, ClickValues} from "../debounced-clicks";
 interface IFieldProps {
     move?: Function;
     lookup?: Function;
+    mark?: Function;
     field: IFieldSettings;
 }
 
@@ -66,6 +67,7 @@ export class Field extends React.Component<IFieldProps> implements ClickTarget {
         this.settings.isMarked = state ?? !this.settings.isMarked
         const count = this.settings.board?.minesCount ?? 0
 
+        this.props.mark?.(count)
         this.setState({
             count,
             isSuggested: false,

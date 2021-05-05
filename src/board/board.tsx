@@ -1,11 +1,12 @@
 import React from "react";
 import './board.scss'
 import {Field} from "../field/field";
-import {BoardState, IBoardSettings, IFieldSettings} from "../board-state";
+import {BoardState, GameState, IBoardSettings, IFieldSettings} from "../board-state";
 import {classes} from "../utils";
 import {DebouncedClicks} from "../debounced-clicks";
 
 interface IBoardProps extends IBoardSettings {
+    updateInfo: Function
 }
 
 export class Board extends React.Component<IBoardProps> {
@@ -21,6 +22,10 @@ export class Board extends React.Component<IBoardProps> {
     constructor(props: IBoardProps) {
         super(props);
         this.board.createBoard(this.props);
+        this.props.updateInfo?.({
+            state: GameState.Pending,
+            minesLeft: this.props.mines
+        })
         // @ts-ignore
         window.board = this.board
     }
@@ -39,20 +44,26 @@ export class Board extends React.Component<IBoardProps> {
             style={settings}
         >
             {this.board.fields.map(field => (
-                <Field field={field} key={`${field.x}.${field.y}`} move={this.move} lookup={this.lookup}/>
+                <Field field={field} key={`${field.x}.${field.y}`} move={this.move} lookup={this.lookup} mark={this.mark}/>
             ))}
         </div>;
     }
 
     tick = () => {
         this.timer++
+        this.props.updateInfo?.({timer: this.timer})
         // console.log('Seconds', this.timer)
+    }
+
+    mark = (minesLeft: number) => {
+        this.props.updateInfo?.({minesLeft})
     }
 
     checkWin(clickedField?: IFieldSettings) {
         const closedFound = this.board.fields.find(field => !field.isMine && (!field.isOpen && clickedField !== field))
         if (!closedFound) {
             console.log('Win!', this.timer, 'seconds')
+            this.props.updateInfo?.({state: GameState.Win})
             this.stop()
             this.setState({won: true})
             this.board.minesFields.forEach(field => field.component?.mark(true))
@@ -65,6 +76,7 @@ export class Board extends React.Component<IBoardProps> {
             this.board.fillBoard(field)
             this.timer = 1
             this.timerId = window.setInterval(this.tick, 1000)
+            this.props.updateInfo?.({state: GameState.InProgress})
         }
 
         if (field.isMine) return this.gameOver()
@@ -94,6 +106,7 @@ export class Board extends React.Component<IBoardProps> {
 
     private gameOver() {
         this.setState({won: false})
+        this.props.updateInfo?.({state: GameState.Loose})
         console.log('game over')
         this.board.minesFields.forEach(field => field.component?.open())
         this.stop()

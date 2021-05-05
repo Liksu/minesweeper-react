@@ -1,15 +1,62 @@
+$mobile: 800px;
+$tablet: 1024px;
+
 .settings-selector {
   background-color: white;
-  border-radius: 4px;
-  width: 30vw;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 25vw;
+  height: 100vh;
+  box-shadow: 2vw 0 1vw rgba(0, 0, 0, 0.3);
+  user-select: none;
+  text-align: left;
+  padding-left: 1em;
 
-  @media (max-width: var(--phone)) {
-    width: 80vw;
-    color: green;
+  @media (max-width: $mobile) {
+    width: 70vw;
   }
 
-  @media (min-width: var(--phone)) and (max-width: var(--tablet)) {
+  @media (min-width: $mobile) and (max-width: $tablet) {
     width: 60vw;
-    color: blue;
+  }
+
+  .sub {
+    margin-left: 2vw;
+  }
+
+  .button {
+    @extend .sub;
+    margin-top: 1.5em;
+    font-size: 120%;
+    padding: 0.5em 0.64em;
+  }
+
+  label {
+    display: block;
+    @extend .sub;
+
+    h4 {
+      margin-bottom: 0;
+    }
+
+    select {
+      margin-top: 4px;
+      min-width: 15vw;
+      font-size: 120%;
+
+      .default {
+        color: silver;
+      }
+    }
+  }
+
+  .link {
+    @extend .sub;
+    cursor: pointer;
+    color: dodgerblue;
+    text-decoration: underline;
   }
 }
