@@ -32,6 +32,12 @@ $tablet: 1024px;
     margin-top: 1.5em;
     font-size: 120%;
     padding: 0.5em 0.64em;
+
+    &.small {
+      margin-top: 0;
+      font-size: 80%;
+      padding: 0.35em 0.5em;
+    }
   }
 
   label {

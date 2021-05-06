@@ -54,7 +54,9 @@ export class Field extends React.Component<IFieldProps> implements ClickTarget {
         this.settings.board?.elements.set(this.element.current as HTMLDivElement, this)
     }
 
-    open = () => {
+    open = (doMove = false) => {
+        if (doMove) this.props.move?.(this.settings)
+
         this.settings.isOpen = true
         this.setState({
             content: this.settings.isMine ? '💣' : (this.settings.value || '').toString(),
@@ -100,8 +102,7 @@ export class Field extends React.Component<IFieldProps> implements ClickTarget {
         switch (action) {
             case ClickValues.Open:
                 if (!this.settings.isMarked) {
-                    if (this.props.move) this.props.move(this.settings)
-                    this.open()
+                    this.open(true)
                 }
                 break
             case ClickValues.Mark:

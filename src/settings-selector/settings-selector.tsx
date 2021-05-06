@@ -1,7 +1,7 @@
 import React from "react";
 import './settings-selector.scss'
 import {Difficulty, IPossibleBoardSettings, Settings} from "../settings";
-import {GameState} from "../board-state";
+import {BoardState, GameState} from "../board-state";
 
 export interface IInfo {
     timer: number
@@ -12,6 +12,8 @@ export interface IInfo {
 interface ISettingsSelectorProps {
     settings: Settings
     info: IInfo
+    board: BoardState
+    onClose: Function
 }
 
 interface IState {
@@ -48,6 +50,7 @@ export class SettingsSelector extends React.Component<ISettingsSelectorProps> {
                     <h3>Game State: {this.props.info?.state}</h3>
                     <h4 className="sub">Seconds from start: {this.props.info?.timer ?? '--'}</h4>
                     <h4 className="sub">Mines left: {this.props.info?.minesLeft}</h4>
+                    <button className="button small" onClick={this.getHelp}>Get Help</button>
                 </div>
             }
 
@@ -118,5 +121,11 @@ export class SettingsSelector extends React.Component<ISettingsSelectorProps> {
     getVariantByBoard(board: string): IPossibleBoardSettings | null {
         const [columns, rows] = board.split(this.joiner).map(string => Number(string))
         return this.possible.find(variant => variant.columns === columns && variant.rows === rows) ?? null
+    }
+
+    getHelp = () => {
+        this.props.board.help()
+        this.props.board.checkWin()
+        this.props.onClose()
     }
 }

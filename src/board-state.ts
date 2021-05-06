@@ -32,7 +32,10 @@ export class IFieldSettings {
     }
 }
 
-export class BoardState extends Array {
+// TODO: tick cause re-render board
+// TODO: each updateInfo cause global re-render
+
+export class BoardState {
     fields: Array<IFieldSettings> = []
     board: Array<Array<IFieldSettings>> = []
     minesFields: Array<IFieldSettings> = []
@@ -107,5 +110,46 @@ export class BoardState extends Array {
 
     get minesCount() {
         return this.mines - this.fields.filter(field => field.isMarked).length
+    }
+
+    help() {
+        const unopenedEmpties = this.fields.filter(field => !field.isMine && !field.isOpen && !field.isMarked)
+        const unmarkedMines = this.minesFields.filter(field => !field.isMarked)
+        let unopenedMines = unmarkedMines.filter(field => this.getAround(field).filter(field => field.isOpen))
+        if (!unopenedMines.length) unopenedMines = unmarkedMines
+
+        const mine = unopenedMines[arand(unopenedMines.length)]
+        const target = unopenedEmpties[arand(unopenedEmpties.length)]
+
+        mine.isMine = false
+        target.isMine = true
+
+        this.getAround(mine).forEach(field => {
+            field.value--;
+            if (field.isOpen) field.component?.setState({content: field.value || ''})
+        })
+        this.getAround(target).forEach(field => {
+            field.value++;
+            if (field.isOpen) field.component?.setState({content: field.value || ''})
+        })
+
+        const mineIndex = this.minesFields.findIndex(field => field === mine)
+        this.minesFields.splice(mineIndex, 1, target)
+
+        this.getAround(mine)
+            .filter(field => !field.value && field.isOpen)
+            .forEach(empty => {
+                empty.component?.open(true)
+            })
+    }
+
+    checkWin(clickedField?: IFieldSettings): boolean {
+        const closedFound = this.fields.find(field => !field.isMine && (!field.isOpen && clickedField !== field))
+        if (!closedFound) {
+            this.minesFields.forEach(field => field.component?.mark(true))
+            return true
+        }
+
+        return false
     }
 }

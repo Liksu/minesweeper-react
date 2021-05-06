@@ -6,9 +6,10 @@ import {Settings} from "./settings";
 import {IInfo, SettingsSelector} from "./settings-selector/settings-selector";
 import {Swipe} from "./swipe";
 import {Wrapper} from "./wrapper/wrapper";
-import {GameState} from "./board-state";
+import {BoardState, GameState} from "./board-state";
 
 class App extends React.Component {
+    board = new BoardState()
     settings = new Settings()
     state = {
         showSettings: false,
@@ -34,10 +35,15 @@ class App extends React.Component {
     render() {
         return (
             <div className="App">
-                <Board columns={this.settings.columns} rows={this.settings.rows} mines={this.settings.mines} updateInfo={this.updateInfo}/>
+                <Board board={this.board}
+                       columns={this.settings.columns}
+                       rows={this.settings.rows}
+                       mines={this.settings.mines}
+                       updateInfo={this.updateInfo}
+                />
                 {this.state.showSettings &&
                     <Wrapper onClose={this.closeSettings}>
-                        <SettingsSelector settings={this.settings} info={this.state}/>
+                        <SettingsSelector settings={this.settings} info={this.state} board={this.board} onClose={this.closeSettings}/>
                     </Wrapper>
                 }
             </div>
