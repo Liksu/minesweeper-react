@@ -13,6 +13,10 @@ Middle click | — | Temporary mark cell with a question sign
 Escape | Swipe to right | Show settings panel
 Escape | Swipe to left | Close settings panel
 
+### Solve helper
+
+In case it is not clear how to solve the position, try the 'Get Help' button in the settings panel. One random mine will change its location.
+
 ## Game modes
 
 - [Beginner](https://liksu.github.io/minesweeper-react/#Beginner)
