@@ -47,10 +47,14 @@ export class SettingsSelector extends React.Component<ISettingsSelectorProps> {
         return <div className="settings-selector" onClick={event => event.stopPropagation()}>
             {this.props.info.state !== GameState.Pending &&
                 <div>
-                    <h3>Game State: {this.props.info?.state}</h3>
+                    <h3>Game State: {this.props.info?.state !== GameState.InProgress ? this.props.info?.state : ''}</h3>
                     <h4 className="sub">Seconds from start: {this.props.info?.timer ?? '--'}</h4>
-                    <h4 className="sub">Mines left: {this.props.info?.minesLeft}</h4>
-                    <button className="button small" onClick={this.getHelp}>Get Help</button>
+                    {this.props.info?.state === GameState.InProgress &&
+                        <h4 className="sub">Mines left: {this.props.info?.minesLeft}</h4>
+                    }
+                    {this.props.info?.state === GameState.InProgress &&
+                        <button className="button small" onClick={this.getHelp}>Get Help</button>
+                    }
                 </div>
             }
 

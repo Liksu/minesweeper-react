@@ -115,7 +115,7 @@ export class BoardState {
     help() {
         const unopenedEmpties = this.fields.filter(field => !field.isMine && !field.isOpen && !field.isMarked)
         const unmarkedMines = this.minesFields.filter(field => !field.isMarked)
-        let unopenedMines = unmarkedMines.filter(field => this.getAround(field).filter(field => field.isOpen))
+        let unopenedMines = unmarkedMines.filter(field => this.getAround(field).filter(field => field.isOpen).length)
         if (!unopenedMines.length) unopenedMines = unmarkedMines
 
         const mine = unopenedMines[arand(unopenedMines.length)]

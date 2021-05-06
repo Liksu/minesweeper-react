@@ -55,6 +55,10 @@ class App extends React.Component {
     }
 
     toggleSettings = (event: KeyboardEvent | TouchEvent, value: boolean = !this.state.showSettings) => {
+        if (event.type === 'keyup' && (event as KeyboardEvent).key === 'h' && this.state.state === GameState.InProgress) {
+            this.board.help()
+            return
+        }
         if (event.type === 'keyup' && (event as KeyboardEvent).key !== 'Escape') return
         this.setState({showSettings: value})
     }
