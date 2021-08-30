@@ -50,7 +50,7 @@ export class SettingsSelector extends React.Component<ISettingsSelectorProps> {
                     <h3>Game State: {this.props.info?.state !== GameState.InProgress ? this.props.info?.state : ''}</h3>
                     <h4 className="sub">Seconds from start: {this.props.info?.timer ?? '--'}</h4>
                     {this.props.info?.state === GameState.InProgress &&
-                        <h4 className="sub">Mines left: {this.props.info?.minesLeft}</h4>
+                        <h4 className="sub">Mines left: {this.props.board.minesCount}</h4>
                     }
                     {this.props.info?.state === GameState.InProgress &&
                         <button className="button small" onClick={this.getHelp}>Get Help</button>
@@ -63,6 +63,10 @@ export class SettingsSelector extends React.Component<ISettingsSelectorProps> {
             <p className="link" onClick={() => this.changeSettings('fill:beginner')}>Beginner</p>
             <p className="link" onClick={() => this.changeSettings('fill:intermediate')}>Intermediate</p>
             <p className="link" onClick={() => this.changeSettings('fill:expert')}>Expert</p>
+
+            <h3>Current board:</h3>
+            <p>{this.props.settings.columns}x{this.props.settings.rows} with {this.props.settings.mines} mines.</p>
+            <button className="button sup" onClick={() => this.restart()}>Restart</button>
 
             <h3>Custom board:</h3>
             <label>
@@ -131,5 +135,9 @@ export class SettingsSelector extends React.Component<ISettingsSelectorProps> {
         this.props.board.help()
         this.props.board.checkWin()
         this.props.onClose()
+    }
+
+    private restart() {
+        window.location.reload()
     }
 }

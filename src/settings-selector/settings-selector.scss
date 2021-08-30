@@ -38,6 +38,10 @@ $tablet: 1024px;
       font-size: 80%;
       padding: 0.35em 0.5em;
     }
+
+    &.sup {
+      margin-top: 0;
+    }
   }
 
   label {

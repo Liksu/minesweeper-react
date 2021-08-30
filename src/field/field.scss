@@ -23,6 +23,11 @@
     content: "?";
   }
 
+  &.cheat:after {
+    content: "💣" !important;
+    opacity: 0.32;
+  }
+
   &.marked {
   }
 

@@ -15,6 +15,7 @@ export class Field extends React.Component<IFieldProps> implements ClickTarget {
     state = {
         content: '',
         isSuggested: false,
+        isCheat: false,
         count: 0
     }
 
@@ -42,7 +43,8 @@ export class Field extends React.Component<IFieldProps> implements ClickTarget {
                 {
                     open: this.settings.isOpen as boolean,
                     marked: this.settings.isMarked as boolean,
-                    suggested: this.state.isSuggested
+                    suggested: this.state.isSuggested,
+                    cheat: this.state.isCheat,
                 },
             )}
             style={cssSettings}
@@ -61,6 +63,7 @@ export class Field extends React.Component<IFieldProps> implements ClickTarget {
         this.setState({
             content: this.settings.isMine ? '💣' : (this.settings.value || '').toString(),
             isSuggested: false,
+            isCheat: false
         })
     }
 
@@ -69,10 +72,10 @@ export class Field extends React.Component<IFieldProps> implements ClickTarget {
         this.settings.isMarked = state ?? !this.settings.isMarked
         const count = this.settings.board?.minesCount ?? 0
 
-        this.props.mark?.(count)
         this.setState({
             count,
             isSuggested: false,
+            isCheat: false,
             content: this.settings.isMarked ? '🚩' : ''
         })
         if (state == null) setTimeout(this.resetAnimation, 0)
@@ -92,6 +95,11 @@ export class Field extends React.Component<IFieldProps> implements ClickTarget {
     suggest = () => {
         if (this.settings.isOpen || this.settings.isMarked) return
         this.setState({isSuggested: !this.state.isSuggested})
+    }
+
+    cheat = () => {
+        if (this.settings.isOpen || this.settings.isMarked) return
+        this.setState({isCheat: !this.state.isCheat})
     }
 
     onClick = (action: ClickValues) => {

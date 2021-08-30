@@ -21,6 +21,7 @@ class App extends React.Component {
         left: event => this.toggleSettings(event, false),
         right: event => this.toggleSettings(event, true),
     })
+    isCheatOn = false
 
     componentDidMount() {
         document.body.addEventListener('keyup', this.toggleSettings)
@@ -54,12 +55,26 @@ class App extends React.Component {
         this.setState({showSettings: false})
     }
 
+    toggleCheat = () => {
+        this.board.minesFields.filter(mine => !mine.isMarked).forEach(mine => mine.component?.cheat())
+    }
+
     toggleSettings = (event: KeyboardEvent | TouchEvent, value: boolean = !this.state.showSettings) => {
-        if (event.type === 'keyup' && (event as KeyboardEvent).key === 'h' && this.state.state === GameState.InProgress) {
-            this.board.help()
-            return
+        if (event.type === 'keyup') {
+            const {key} = event as KeyboardEvent
+            if (key.toLowerCase() === 'h' && this.state.state === GameState.InProgress) {
+                if (event.ctrlKey && event.shiftKey) {
+                    this.isCheatOn = !this.isCheatOn
+                    this.toggleCheat()
+                } else {
+                    if (this.isCheatOn) this.toggleCheat()
+                    this.board.help()
+                    if (this.isCheatOn) this.toggleCheat()
+                }
+                return
+            }
+            if (key !== 'Escape') return
         }
-        if (event.type === 'keyup' && (event as KeyboardEvent).key !== 'Escape') return
         this.setState({showSettings: value})
     }
 
