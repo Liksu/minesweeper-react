@@ -7,6 +7,7 @@ import {IInfo, SettingsSelector} from "./settings-selector/settings-selector";
 import {Swipe} from "./swipe";
 import {Wrapper} from "./wrapper/wrapper";
 import {BoardState, GameState} from "./board-state";
+import {Keyboard} from "./keyboard";
 
 class App extends React.Component {
     board = new BoardState()
@@ -22,15 +23,18 @@ class App extends React.Component {
         right: event => this.toggleSettings(event, true),
     })
     isCheatOn = false
+    keyboard = new Keyboard()
 
     componentDidMount() {
         document.body.addEventListener('keyup', this.toggleSettings)
         this.swipe.attach()
+        this.keyboard.attach(this.board)
     }
 
     componentWillUnmount() {
         document.body.removeEventListener('keyup', this.toggleSettings)
         this.swipe.detach()
+        this.keyboard.detach()
     }
 
     render() {
