@@ -35,6 +35,21 @@
     pointer-events: none;
   }
 
+  &.green {
+    border-color: #b1f5a3;
+    background-color: #8cd999;
+  }
+
+  &.red {
+    border-color: pink;
+    background-color: palevioletred;
+  }
+
+  &.active {
+    border-color: #75f0f0;
+    background-color: #8fefef;
+  }
+
   &.animate:before {
     animation: mines-count 1s;
 

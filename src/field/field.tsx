@@ -11,6 +11,12 @@ interface IFieldProps {
     field: IFieldSettings;
 }
 
+export enum SelectionTypes {
+    Green = 'green',
+    Red = 'red',
+    Active = 'active',
+}
+
 export class Field extends React.Component<IFieldProps> implements ClickTarget {
     state = {
         content: '',
@@ -88,7 +94,7 @@ export class Field extends React.Component<IFieldProps> implements ClickTarget {
         const marked = around?.reduce((n: number, field: IFieldSettings) => n + Number(field.isMarked), 0) ?? 0
 
         if (this.props.lookup && this.settings.value === marked) {
-            this.props.lookup(this.settings)
+            return this.props.lookup(this.settings)
         }
     }
 
@@ -145,5 +151,9 @@ export class Field extends React.Component<IFieldProps> implements ClickTarget {
             .forEach(field => {
                 field.component?.element.current?.classList.toggle('pressed', !state)
             })
+    }
+
+    select = (type: SelectionTypes = SelectionTypes.Green, state: boolean = true) => {
+        this.element.current?.classList.toggle(type, state)
     }
 }
