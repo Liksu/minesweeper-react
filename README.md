@@ -4,6 +4,8 @@ This is the very small game made with [react](https://reactjs.org/).
 
 ## Controls
 
+### Mouse
+
 Desktop | Mobile | Action
 ---|---|---
 Left click | Tap | Open cell
@@ -13,7 +15,20 @@ Middle click | — | Temporary mark cell with a question sign
 <kbd>Escape</kbd> | Swipe to right | Show settings panel
 <kbd>Escape</kbd> | Swipe to left | Close settings panel
 
-### Solve helper
+### Keyboard
+
+To start keyboard navigation press <kbd>Enter</kbd> or <kbd>Space</kbd>.
+
+Move cursor: <kbd>←</kbd>, <kbd>→</kbd>, <kbd>↑</kbd>, <kbd>↓</kbd>, <kbd>Home</kbd>, <kbd>End</kbd>, <kbd>PageUp</kbd>, <kbd>PageDown</kbd>.
+
+Jump to start/end of row: <kbd>Ctrl</kbd> + <kbd>Home</kbd>, <kbd>Ctrl</kbd> + <kbd>End</kbd>\
+Jump to top/bottom fo column: <kbd>Ctrl</kbd> + <kbd>PageUp</kbd>, <kbd>Ctrl</kbd> + <kbd>PageDown</kbd>
+
+Open cell under cursor: <kbd>Enter</kbd>\
+Mark cell: <kbd>Space</kbd>\
+Open nearest free cells: <kbd>Ctrl + Enter</kbd> 
+
+## Solve helper
 
 In case it is not clear how to solve the position, try the 'Get Help' button in the settings panel. One random mine will change its location.
 Key <kbd>h</kbd> on keyboard do the same.
