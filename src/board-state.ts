@@ -73,7 +73,7 @@ export class BoardState {
             const x = arand(this.columns)
             const y = arand(this.rows)
 
-            if (!this.board[x][y].isMine && x !== starter.x && y !== starter.y) {
+            if (!this.board[x][y].isMine && !(x === starter.x && y === starter.y)) {
                 this.minesFields.push(this.board[x][y])
                 this.board[x][y].isMine = true;
                 n--;
