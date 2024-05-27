@@ -85,6 +85,7 @@ export class Field extends React.Component<IFieldProps> implements ClickTarget {
             content: this.settings.isMarked ? '🚩' : ''
         })
         if (state == null) setTimeout(this.resetAnimation, 0)
+        this.props.mark?.(count)
     }
 
     lookup = () => {
