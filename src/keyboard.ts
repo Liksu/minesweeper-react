@@ -7,7 +7,7 @@ export class Keyboard {
     private readonly element: HTMLElement | null = null
     board!: BoardState
 
-    actions: {[action: string]: Function} = {
+    actions: {[action: string]: Function | string} = {
         // movements: ← ↑ → ↓
         ArrowUp: () => this.move(0, -1),
         ArrowDown: () => this.move(0, 1),
@@ -30,6 +30,30 @@ export class Keyboard {
         Enter: () => this.open(),
         CtrlEnter: () => this.lookup(),
         Space: () => this.mark(),
+        
+        // numpad game:
+        Insert: 'Space',
+        '+': 'CtrlEnter',
+        0: 'Space',
+        1: 'End',
+        2: 'ArrowDown',
+        3: 'PageDown',
+        4: 'ArrowLeft',
+        Clear: 'Enter',
+        5: 'Enter',
+        6: 'ArrowRight',
+        7: 'Home',
+        8: 'ArrowUp',
+        9: 'PageUp',
+        Ctrl1: () => this.moveTo(0, this.board.rows - 1),
+        Ctrl2: 'CtrlPageDown',
+        Ctrl3: () => this.moveTo(this.board.columns - 1, this.board.rows - 1),
+        Ctrl4: 'CtrlHome',
+        Ctrl5: () => this.moveTo(this.board.columns / 2 | 0, this.board.rows / 2 | 0),
+        Ctrl6: 'CtrlEnd',
+        Ctrl7: () => this.moveTo(0, 0),
+        Ctrl8: 'CtrlPageUp',
+        Ctrl9: () => this.moveTo(this.board.columns - 1, 0),
     }
 
     constructor(element: HTMLElement | string = document.body) {
@@ -50,7 +74,10 @@ export class Keyboard {
     }
 
     private handleKeyboard = (event: KeyboardEvent) => {
-        this.actions[this.getActionName(event)]?.()
+        let action = this.actions[this.getActionName(event)]
+        while (typeof action === 'string') action = this.actions[action]
+        action?.()
+        event.preventDefault()
     }
 
     private init = (event: KeyboardEvent) => {

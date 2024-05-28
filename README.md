@@ -28,6 +28,9 @@ Open cell under cursor: <kbd>Enter</kbd>\
 Mark cell: <kbd>Space</kbd>\
 Open nearest free cells: <kbd>Ctrl + Enter</kbd> 
 
+Numpad is also supported: <kbd>1</kbd> – <kbd>9</kbd> - move cursor, <kbd>5</kbd> - open cell under the cursor, <kbd>0</kbd> - mark cell, <kbd>+</kbd> - open nearest free cells.\
+<kbd>Ctrl</kbd> + number - move cursor to the according borders and corners of the field, <kbd>Ctrl</kbd> + <kbd>5</kbd> - move cursor to the center of the field. 
+
 ## Solve helper
 
 In case it is not clear how to solve the position, try the 'Get Help' button in the settings panel. One random mine will change its location.
