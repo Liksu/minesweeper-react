@@ -41,9 +41,12 @@ export class Settings implements IBoardSettings {
         const settings = Settings.getInitialSettings()
 
         // fix for mobile landscape
-        const isLandscape = window.screen.orientation
-            ? window.screen.orientation.type.substr(0, 4) === 'land'
-            : window.innerWidth > window.innerHeight
+        const isLandscape =
+            settings.orientation
+                ? settings.orientation === 'landscape'
+                : window.screen.orientation
+                    ? window.screen.orientation.type.substr(0, 4) === 'land'
+                    : window.innerWidth > window.innerHeight
 
         const isMobile = window.innerWidth < 800
 
@@ -81,7 +84,7 @@ export class Settings implements IBoardSettings {
         return result.reverse()
     }
 
-    static getInitialSettings(): IBoardSettings {
+    static getInitialSettings(): IBoardSettings & {orientation?: string} {
         let hash = window.location.hash.replace('#', '').toLowerCase()
 
         if (!hash) return modes.default
@@ -114,8 +117,12 @@ export class Settings implements IBoardSettings {
 
         if (/^custom:/.test(hash)) {
             const groups = hash.match(/^custom:(?<columns>\d+)\D(?<rows>\d+)\D(?<mines>\d+)/)?.groups as {[key in TSettings]: string}
-            let customSettings = {} as IBoardSettings
+            let customSettings = {} as (IBoardSettings & {orientation?: string})
             for (let key in groups) customSettings[key as keyof IBoardSettings] = +groups[key as TSettings]
+            
+            const orientation = hash.match(/(portrait|landscape)/)?.[0]
+            if (orientation) customSettings.orientation = orientation
+
             return customSettings
         }
 
