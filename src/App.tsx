@@ -8,6 +8,7 @@ import {Swipe} from "./swipe";
 import {Wrapper} from "./wrapper/wrapper";
 import {BoardState, GameState} from "./board-state";
 import {Keyboard} from "./keyboard";
+import {Communicator} from './communicator';
 
 class App extends React.Component {
     board = new BoardState()
@@ -16,7 +17,8 @@ class App extends React.Component {
         showSettings: false,
         timer: 0,
         minesLeft: this.settings.mines,
-        state: GameState.Pending
+        state: GameState.Pending,
+        stateValue: null,
     }
     swipe = new Swipe().on({
         left: event => this.toggleSettings(event, false),
@@ -24,6 +26,7 @@ class App extends React.Component {
     })
     isCheatOn = false
     keyboard = new Keyboard()
+    communicator = new Communicator(this)
 
     componentDidMount() {
         document.body.addEventListener('keyup', this.toggleSettings)
@@ -70,10 +73,12 @@ class App extends React.Component {
                 if (event.ctrlKey && event.shiftKey) {
                     this.isCheatOn = !this.isCheatOn
                     this.toggleCheat()
+                    this.updateInfo({cheated: true} as IInfo)
                 } else {
                     if (this.isCheatOn) this.toggleCheat()
                     this.board.help()
                     if (this.isCheatOn) this.toggleCheat()
+                    this.updateInfo({cheated: true} as IInfo)
                 }
                 return
             }
@@ -84,6 +89,15 @@ class App extends React.Component {
 
     updateInfo = (info: IInfo) => {
         this.setState(info)
+        if (info.state) this.setState({stateValue: this.convertStateToValue(info.state)})
+        this.communicator.notifyParent()
+    }
+    
+    private convertStateToValue(state: GameState): IInfo['stateValue'] {
+        if (state === GameState.InProgress) return 0
+        if (state === GameState.Win) return 1
+        if (state === GameState.Loose) return -1
+        return null
     }
 }
 

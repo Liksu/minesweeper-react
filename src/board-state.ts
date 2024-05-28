@@ -4,10 +4,10 @@ import React from "react";
 
 export type TSettings = 'columns' | 'rows' | 'mines'
 export enum GameState {
-    Pending = 'Pending',
-    InProgress = 'In Progress',
-    Win = 'You Win! 😎',
-    Loose = 'You Loose 🙁'
+    Pending = 'Pending', // before first click, stateValue: null
+    InProgress = 'In Progress', // after first click, stateValue: 0
+    Win = 'You Win! 😎', // all empty fields are opened, stateValue: 1
+    Loose = 'You Loose 🙁' // mine is clicked, stateValue: -1
 }
 
 export interface IBoardSettings {

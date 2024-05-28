@@ -7,6 +7,8 @@ export interface IInfo {
     timer: number
     minesLeft: number
     state: GameState
+    stateValue: 0 | 1 | -1 | null
+    cheated?: boolean
 }
 
 interface ISettingsSelectorProps {
