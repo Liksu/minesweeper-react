@@ -30,7 +30,7 @@ export class Communicator {
         switch (action) {
             case 'subscribe_me': return this.subscribeParent(event.source)
             case 'unsubscribe_me': return this.unsubscribeParent()
-            case 'restart': return this.restartGame()
+            case 'restart': return this.app.restart()
             case 'get_state': return this.notifyParent()
         }
     }
@@ -42,9 +42,5 @@ export class Communicator {
     
     private unsubscribeParent() {
         this.parent = null
-    }
-    
-    private restartGame() {
-        window.location.reload()
     }
 }

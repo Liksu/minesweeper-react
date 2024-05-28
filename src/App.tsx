@@ -27,6 +27,7 @@ class App extends React.Component {
     isCheatOn = false
     keyboard = new Keyboard()
     communicator = new Communicator(this)
+    gameId = 0
 
     componentDidMount() {
         document.body.addEventListener('keyup', this.toggleSettings)
@@ -48,10 +49,16 @@ class App extends React.Component {
                        rows={this.settings.rows}
                        mines={this.settings.mines}
                        updateInfo={this.updateInfo}
+                       key={this.gameId}
                 />
                 {this.state.showSettings &&
                     <Wrapper onClose={this.closeSettings}>
-                        <SettingsSelector settings={this.settings} info={this.state} board={this.board} onClose={this.closeSettings}/>
+                        <SettingsSelector settings={this.settings}
+                                          info={this.state}
+                                          board={this.board}
+                                          onClose={this.closeSettings}
+                                          onRestart={this.restart}
+                        />
                     </Wrapper>
                 }
             </div>
@@ -66,8 +73,8 @@ class App extends React.Component {
         this.board.minesFields.filter(mine => !mine.isMarked).forEach(mine => mine.component?.cheat())
     }
 
-    toggleSettings = (event: KeyboardEvent | TouchEvent, value: boolean = !this.state.showSettings) => {
-        if (event.type === 'keyup') {
+    toggleSettings = (event: KeyboardEvent | TouchEvent | null, value: boolean = !this.state.showSettings) => {
+        if (event?.type === 'keyup') {
             const {key} = event as KeyboardEvent
             if (key.toLowerCase() === 'h' && this.state.state === GameState.InProgress) {
                 if (event.ctrlKey && event.shiftKey) {
@@ -98,6 +105,18 @@ class App extends React.Component {
         if (state === GameState.Win) return 1
         if (state === GameState.Loose) return -1
         return null
+    }
+    
+    public restart = () => {
+        this.updateInfo({
+            timer: 0,
+            minesLeft: this.settings.mines,
+            state: GameState.Pending,
+            stateValue: null,
+        })
+        this.isCheatOn = false
+        this.toggleSettings(null, false)
+        this.gameId++
     }
 }
 

@@ -16,6 +16,7 @@ interface ISettingsSelectorProps {
     info: IInfo
     board: BoardState
     onClose: Function
+    onRestart: Function
 }
 
 interface IState {
@@ -68,7 +69,7 @@ export class SettingsSelector extends React.Component<ISettingsSelectorProps> {
 
             <h3>Current board:</h3>
             <p>{this.props.settings.columns}x{this.props.settings.rows} with {this.props.settings.mines} mines.</p>
-            <button className="button sup" onClick={() => this.restart()}>Restart</button>
+            <button className="button sup" onClick={() => this.props.onRestart()}>Restart</button>
 
             <h3>Custom board:</h3>
             <label>
@@ -137,9 +138,5 @@ export class SettingsSelector extends React.Component<ISettingsSelectorProps> {
         this.props.board.help()
         this.props.board.checkWin()
         this.props.onClose()
-    }
-
-    private restart() {
-        window.location.reload()
     }
 }

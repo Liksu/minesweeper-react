@@ -111,4 +111,8 @@ export class Board extends React.Component<IBoardProps> {
         this.props.board.minesFields.forEach(field => field.component?.open())
         this.stop()
     }
+    
+    componentWillUnmount() {
+        clearInterval(this.timerId)
+    }
 }
