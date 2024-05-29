@@ -95,9 +95,8 @@ class App extends React.Component {
     }
 
     updateInfo = (info: IInfo) => {
-        this.setState(info)
-        if (info.state) this.setState({stateValue: this.convertStateToValue(info.state)})
-        this.communicator.notifyParent()
+        if (info.state) info = {...info, stateValue: this.convertStateToValue(info.state)}
+        this.setState(info, () => this.communicator.notifyParent())
     }
     
     private convertStateToValue(state: GameState): IInfo['stateValue'] {
