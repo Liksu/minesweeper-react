@@ -1,11 +1,11 @@
-import {BoardState} from "./board-state"
 import {SelectionTypes} from "./field/field"
+import App from './App'
 
 export class Keyboard {
     x = 0
     y = 0
     private readonly element: HTMLElement | null = null
-    board!: BoardState
+    app!: App
 
     actions: {[action: string]: Function | string} = {
         // movements: ← ↑ → ↓
@@ -22,14 +22,15 @@ export class Keyboard {
 
         // movements: ⭰ ⭲ ⭱ ⭳
         CtrlHome: () => this.moveTo(0, null),
-        CtrlEnd: () => this.moveTo(this.board.columns - 1, null),
+        CtrlEnd: () => this.moveTo(this.app.board.columns - 1, null),
         CtrlPageUp: () => this.moveTo(null, 0),
-        CtrlPageDown: () => this.moveTo(null, this.board.rows - 1),
+        CtrlPageDown: () => this.moveTo(null, this.app.board.rows - 1),
 
         // game:
         Enter: () => this.open(),
         CtrlEnter: () => this.lookup(),
         Space: () => this.mark(),
+        r: () => this.app.restart(),
         
         // numpad game:
         Insert: 'Space',
@@ -45,23 +46,23 @@ export class Keyboard {
         7: 'Home',
         8: 'ArrowUp',
         9: 'PageUp',
-        Ctrl1: () => this.moveTo(0, this.board.rows - 1),
+        Ctrl1: () => this.moveTo(0, this.app.board.rows - 1),
         Ctrl2: 'CtrlPageDown',
-        Ctrl3: () => this.moveTo(this.board.columns - 1, this.board.rows - 1),
+        Ctrl3: () => this.moveTo(this.app.board.columns - 1, this.app.board.rows - 1),
         Ctrl4: 'CtrlHome',
-        Ctrl5: () => this.moveTo(this.board.columns / 2 | 0, this.board.rows / 2 | 0),
+        Ctrl5: () => this.moveTo(this.app.board.columns / 2 | 0, this.app.board.rows / 2 | 0),
         Ctrl6: 'CtrlEnd',
         Ctrl7: () => this.moveTo(0, 0),
         Ctrl8: 'CtrlPageUp',
-        Ctrl9: () => this.moveTo(this.board.columns - 1, 0),
+        Ctrl9: () => this.moveTo(this.app.board.columns - 1, 0),
     }
 
     constructor(element: HTMLElement | string = document.body) {
         this.element = typeof element === 'string' ? document.querySelector(element) ?? null : (element as HTMLElement)
     }
 
-    public attach(board: BoardState, andRun = false) {
-        this.board = board
+    public attach(app: App, andRun = false) {
+        this.app = app
         if (!this.element) return;
         this.element.addEventListener('keydown', andRun ? this.handleKeyboard : this.init, false)
         if (andRun) this.select()
@@ -93,7 +94,7 @@ export class Keyboard {
     }
 
     public select(state = true) {
-        this.board.board[this.x][this.y].component?.select(SelectionTypes.Active, state)
+        this.app.board.board[this.x][this.y].component?.select(SelectionTypes.Active, state)
     }
 
     public moveTo(x: number | null, y: number | null) {
@@ -112,25 +113,25 @@ export class Keyboard {
         this.y += dy
 
         if (this.x < 0) this.x = 0
-        if (this.x === this.board.columns) this.x = this.board.columns - 1
+        if (this.x === this.app.board.columns) this.x = this.app.board.columns - 1
         if (this.y < 0) this.y = 0
-        if (this.y === this.board.rows) this.y = this.board.rows - 1
+        if (this.y === this.app.board.rows) this.y = this.app.board.rows - 1
 
         this.select(true)
     }
 
     private mark() {
-        this.board.board[this.x][this.y].component?.mark()
+        this.app.board.board[this.x][this.y].component?.mark()
         this.select()
     }
 
     private open() {
-        this.board.board[this.x][this.y].component?.open(true)
+        this.app.board.board[this.x][this.y].component?.open(true)
         this.select()
     }
 
     private lookup() {
-        this.board.board[this.x][this.y].component?.lookup()
+        this.app.board.board[this.x][this.y].component?.lookup()
     }
 
     private getActionName(event: KeyboardEvent): string {

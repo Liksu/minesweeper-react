@@ -26,7 +26,8 @@ Jump to top/bottom fo column: <kbd>Ctrl</kbd> + <kbd>PageUp</kbd>, <kbd>Ctrl</kb
 
 Open cell under cursor: <kbd>Enter</kbd>\
 Mark cell: <kbd>Space</kbd>\
-Open nearest free cells: <kbd>Ctrl + Enter</kbd> 
+Open nearest free cells: <kbd>Ctrl + Enter</kbd>\
+Restart game: <kbd>r</kbd>
 
 Numpad is also supported: <kbd>1</kbd> – <kbd>9</kbd> - move cursor, <kbd>5</kbd> - does nothing, <kbd>0</kbd> - mark cell, <kbd>+</kbd> - open nearest free cells.\
 <kbd>Ctrl</kbd> + number - move cursor to the according borders and corners of the field, <kbd>Ctrl</kbd> + <kbd>5</kbd> - move cursor to the center of the field. 

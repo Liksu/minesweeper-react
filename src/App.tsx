@@ -32,7 +32,7 @@ class App extends React.Component {
     componentDidMount() {
         document.body.addEventListener('keyup', this.toggleSettings)
         this.swipe.attach()
-        this.keyboard.attach(this.board)
+        this.keyboard.attach(this)
     }
 
     componentWillUnmount() {
