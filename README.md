@@ -6,14 +6,14 @@ This is the very small game made with [react](https://reactjs.org/).
 
 ### Mouse
 
-Desktop | Mobile | Action
----|---|---
-Left click | Tap | Open cell
-Right click | Long tap | Mark cell
-Left + Right click | Double tap | Open the nearest free cells (if the number of cells marked around is equal to the value in the target cell)
-Middle click | — | Temporary mark cell with a question sign
-<kbd>Escape</kbd> | Swipe to right | Show settings panel
-<kbd>Escape</kbd> | Swipe to left | Close settings panel
+| Desktop            | Mobile         | Action                                                                                                      |
+|--------------------|----------------|-------------------------------------------------------------------------------------------------------------|
+| Left click         | Tap            | Open cell                                                                                                   |
+| Right click        | Long tap       | Mark cell                                                                                                   |
+| Left + Right click | Double tap     | Open the nearest free cells (if the number of cells marked around is equal to the value in the target cell) |
+| Middle click       | —              | Temporary mark cell with a question sign                                                                    |
+| <kbd>Escape</kbd>  | Swipe to right | Show settings panel                                                                                         |
+| <kbd>Escape</kbd>  | Swipe to left  | Close settings panel                                                                                        |
 
 ### Keyboard
 
@@ -28,7 +28,7 @@ Open cell under cursor: <kbd>Enter</kbd>\
 Mark cell: <kbd>Space</kbd>\
 Open nearest free cells: <kbd>Ctrl + Enter</kbd> 
 
-Numpad is also supported: <kbd>1</kbd> – <kbd>9</kbd> - move cursor, <kbd>5</kbd> - open cell under the cursor, <kbd>0</kbd> - mark cell, <kbd>+</kbd> - open nearest free cells.\
+Numpad is also supported: <kbd>1</kbd> – <kbd>9</kbd> - move cursor, <kbd>5</kbd> - does nothing, <kbd>0</kbd> - mark cell, <kbd>+</kbd> - open nearest free cells.\
 <kbd>Ctrl</kbd> + number - move cursor to the according borders and corners of the field, <kbd>Ctrl</kbd> + <kbd>5</kbd> - move cursor to the center of the field. 
 
 ## Solve helper
